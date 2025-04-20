@@ -88,7 +88,6 @@ export default async (options?: UploadOptions): Promise<void> => {
  
       } catch (error: any) {
         console.error(chalk.red(`error uploading: ${error.message}`));
-        console.error(error.stack);
       }
       return;
     }
@@ -124,7 +123,6 @@ export default async (options?: UploadOptions): Promise<void> => {
         }
       } catch (error: any) {
         console.error(chalk.red(`error uploading: ${error.message}`));
-        console.error(error.stack);
       }
     }
   } catch (error: any) {
