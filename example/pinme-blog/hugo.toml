@@ -1,0 +1,9 @@
+languageCode = "zh-cn"
+title = "PINME Blog"
+theme = "PaperMod"
+baseURL = "./"  
+
+
+[params]
+  relativeURLs = true 
+  canonifyURLs = false 
