@@ -12,34 +12,6 @@ Website：[https://pinme.eth.limo/](https://pinme.eth.limo/)
 - 🔗 Automatically generate accessible IPFS links
 - 🌐 Preview uploaded content
 
-## Usage Tips
-
-### Uploading Vite Projects
-
-When uploading projects built with Vite, please note:
-
-1. **Vite Configuration**: Add `base: "./"` to your Vite configuration file to ensure proper asset path resolution:
-
-```js
-// vite.config.js
-export default {
-  base: "./",
-  // other configurations...
-}
-```
-
-2. **Path Requirements**: When using `pinme upload` command, you must use relative paths rather than absolute paths:
-
-```bash
-# Correct usage (relative path)
-pinme upload ./dist
-
-# Incorrect usage (absolute path)
-pinme upload /home/user/project/dist
-```
-
-This ensures that your Vite-built application will work correctly when accessed through IPFS.
-
 ## Installation
 
 ### Using npm
@@ -178,6 +150,22 @@ Logs and configuration files are stored in:
 ## License
 
 MIT License - See the [LICENSE](LICENSE) file for details
+
+## Usage Tips
+
+### Uploading Vite Projects
+
+When uploading projects built with Vite, please note:
+
+1. **Vite Configuration**: Add `base: "./"` to your Vite configuration file to ensure proper asset path resolution:
+
+```js
+// vite.config.js
+export default {
+  base: "./",
+  // other configurations...
+}
+```
 
 ## Contact Us
 
