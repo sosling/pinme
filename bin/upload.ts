@@ -130,3 +130,4 @@ export default async (options?: UploadOptions): Promise<void> => {
     console.error(error.stack);
   }
 }; 
+

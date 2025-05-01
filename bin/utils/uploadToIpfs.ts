@@ -112,10 +112,9 @@ async function uploadDirectory(directoryPath: string, deviceId: string): Promise
       filename: file.name,
     });
   });
-  formData.append('uid', deviceId);
 
   const spinner = ora(`Uploading ${directoryPath} to glitter ipfs...`).start();
-  const response = await axios.post<IpfsResponse['data']>(`${ipfsApiUrl}/add`, formData, {
+  const response = await axios.post<IpfsResponse['data']>(`${ipfsApiUrl}/add?uid=${deviceId}&cidV=1`, formData, {
     headers: {
       ...formData.getHeaders(),
     },
@@ -162,10 +161,9 @@ async function uploadFile(filePath: string, deviceId: string): Promise<string | 
   formData.append('file', fs.createReadStream(filePath), {
     filename: filePath.split(path.sep).pop() || '',
   });
-  formData.append('uid', deviceId);
 
   const spinner = ora(`Uploading ${filePath} to glitter ipfs...`).start();
-  const response = await axios.post<IpfsResponse['data']>(`${ipfsApiUrl}/add`, formData, {
+  const response = await axios.post<IpfsResponse['data']>(`${ipfsApiUrl}/add?uid=${deviceId}&cidV=1`, formData, {
     headers: {
       ...formData.getHeaders(),
     },
