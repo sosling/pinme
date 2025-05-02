@@ -137,7 +137,7 @@ pinme help
 
 Uploaded files are stored on the IPFS network and accessible through the Glitter Protocol's IPFS gateway. After a successful upload, you will receive:
 
-1. IPFS hash value
+1. IPFS content hash
 2. Accessible URL link
 
 ### Log Locations
