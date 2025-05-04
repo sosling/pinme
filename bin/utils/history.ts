@@ -110,7 +110,7 @@ const displayUploadHistory = (limit: number = 10): void => {
   recentHistory.forEach((item, index) => {
     console.log(chalk.green(`${index + 1}. ${item.filename}`));
     console.log(chalk.white(`   Path: ${item.path}`));
-    console.log(chalk.white(`   Content Hash: ${item.contentHash}`));
+    console.log(chalk.white(`   IPFS CID: ${item.contentHash}`));
     if (item.shortUrl) {
       console.log(chalk.white(`   ENS URL: https://${item.shortUrl}.pinit.eth.limo`));
     }
