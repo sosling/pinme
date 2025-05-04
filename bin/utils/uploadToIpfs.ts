@@ -236,7 +236,7 @@ async function uploadFile(
         },
       },
     );
-    console.log(chalk.cyan(JSON.stringify(response)));
+
     const resData = response.data.data;
     // check if the returned data is an array and contains at least one element
     if (Array.isArray(resData) && resData.length > 0) {
