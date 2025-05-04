@@ -19,6 +19,7 @@ interface UploadRecord {
   size: number;
   fileCount: number;
   type: 'directory' | 'file';
+  shortUrl?: string | null;
 }
 
 interface UploadHistory {
@@ -33,6 +34,7 @@ interface UploadData {
   size: number;
   fileCount?: number;
   isDirectory?: boolean;
+  shortUrl?: string | null;
 }
 
 // ensure the history directory exists
@@ -62,7 +64,8 @@ const saveUploadHistory = (uploadData: UploadData): boolean => {
       previewHash: uploadData.previewHash,
       size: uploadData.size,
       fileCount: uploadData.fileCount || 1,
-      type: uploadData.isDirectory ? 'directory' : 'file'
+      type: uploadData.isDirectory ? 'directory' : 'file',
+      shortUrl: uploadData?.shortUrl || null
     };
     
     history.uploads.unshift(newRecord); // add to the beginning
@@ -98,26 +101,26 @@ const displayUploadHistory = (limit: number = 10): void => {
     return;
   }
   
-  console.log(chalk.bold('\n📜 Upload History:'));
-  console.log(chalk.dim('─'.repeat(80)));
+  console.log(chalk.cyan('Upload History:'));
+  console.log(chalk.cyan('-'.repeat(80)));
   
-  history.forEach((record, index) => {
-    console.log(chalk.bold(`#${index + 1} - ${record.date}`));
-    console.log(chalk.cyan(`Name: ${record.filename}`));
-    console.log(chalk.cyan(`Path: ${record.path}`));
-    console.log(chalk.cyan(`Type: ${record.type}`));
-    console.log(chalk.cyan(`Size: ${formatSize(record.size)}`));
-    if (record.type === 'directory') {
-      console.log(chalk.cyan(`Files: ${record.fileCount}`));
+  // 显示最近的记录，最多显示limit条
+  const recentHistory = history.slice(-limit);
+  
+  recentHistory.forEach((item, index) => {
+    console.log(chalk.green(`${index + 1}. ${item.filename}`));
+    console.log(chalk.white(`   Path: ${item.path}`));
+    console.log(chalk.white(`   Content Hash: ${item.contentHash}`));
+    if (item.shortUrl) {
+      console.log(chalk.white(`   ENS URL: https://${item.shortUrl}.pinit.eth.limo`));
     }
-    console.log(chalk.cyan(`Content Hash: ${record.contentHash}`));
-    if (record.previewHash) {
-      console.log(chalk.cyan(`Preview Hash: ${record.previewHash}`));
-      console.log(chalk.cyan(`URL: https://ipfs.glitterprotocol.dev/ipfs/${record.previewHash}/#/?from=local`));
-    } else {
-      console.log(chalk.cyan(`URL: https://ipfs.glitterprotocol.dev/ipfs/${record.contentHash}`));
+    console.log(chalk.white(`   Size: ${formatSize(item.size)}`));
+    console.log(chalk.white(`   Files: ${item.fileCount}`));
+    console.log(chalk.white(`   Type: ${item.type === 'directory' ? 'Directory' : 'File'}`));
+    if (item.timestamp) {
+      console.log(chalk.white(`   Date: ${new Date(item.timestamp).toLocaleString()}`));
     }
-    console.log(chalk.dim('─'.repeat(80)));
+    console.log(chalk.cyan('-'.repeat(80)));
   });
   
   // display the statistics

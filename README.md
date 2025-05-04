@@ -130,7 +130,7 @@ pinme help
 
 ## Upload Limits
 
-- Single file size limit: 100MB
+- Single file size limit: 20MB
 - Total directory size limit: 500MB
 
 ## File Storage
