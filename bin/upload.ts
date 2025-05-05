@@ -82,7 +82,8 @@ export default async (options?: UploadOptions): Promise<void> => {
               figlet.textSync('Successful', { horizontalLayout: 'full' }),
             ),
           );
-          console.log(chalk.cyan(`URL: ${URL}${encryptedCID}`));
+          console.log(chalk.cyan(`URL:`));
+          console.log(chalk.cyan(`${URL}${encryptedCID}`));
         }
       } catch (error: any) {
         console.error(chalk.red(`Error: ${error.message}`));
@@ -117,7 +118,8 @@ export default async (options?: UploadOptions): Promise<void> => {
               figlet.textSync('Successful', { horizontalLayout: 'full' }),
             ),
           );
-          console.log(chalk.cyan(`URL: ${URL}${encryptedCID}`));
+          console.log(chalk.cyan(`URL:`));
+          console.log(chalk.cyan(`${URL}${encryptedCID}`));
         }
       } catch (error: any) {
         console.error(chalk.red(`Error: ${error.message}`));
