@@ -158,7 +158,6 @@ async function uploadDirectory(
         spinner.succeed(
           `Successfully uploaded ${directoryPath} to glitter ipfs`,
         );
-        const fileStats = fs.statSync(directoryPath);
         const fileCount = countFilesInDirectory(directoryPath);
         const uploadData = {
           path: directoryPath,
@@ -171,10 +170,10 @@ async function uploadDirectory(
           shortUrl: directoryItem.ShortUrl || null,
         };
         saveUploadHistory(uploadData);
-        
-        return { 
+
+        return {
           hash: directoryItem.Hash,
-          shortUrl: directoryItem.ShortUrl
+          shortUrl: directoryItem.ShortUrl,
         };
       }
       spinner.fail(`Directory hash not found in response`);
@@ -189,13 +188,9 @@ async function uploadDirectory(
     if (error.response && error.response.data && error.response.data.code) {
       const errorCode = error.response.data.code.toString();
       if (ERROR_CODES[errorCode]) {
-        spinner.fail(
-          `Error: ${ERROR_CODES[errorCode]} (Code: ${errorCode})`,
-        );
+        spinner.fail(`Error: ${ERROR_CODES[errorCode]} (Code: ${errorCode})`);
         console.log(
-          chalk.red(
-            `Error: ${ERROR_CODES[errorCode]} (Code: ${errorCode})`,
-          ),
+          chalk.red(`Error: ${ERROR_CODES[errorCode]} (Code: ${errorCode})`),
         );
         return null;
       }
@@ -223,8 +218,11 @@ async function uploadFile(
   const spinner = ora(`Uploading ${filePath} to glitter ipfs...`).start();
   try {
     const formData = new FormData();
+    const fileName = filePath.split(path.sep).pop() || '';
+    const encodedFileName = encodeURIComponent(fileName);
+
     formData.append('file', fs.createReadStream(filePath), {
-      filename: filePath.split(path.sep).pop() || '',
+      filename: encodedFileName,
     });
 
     const response = await axios.post<IpfsResponse['data']>(
@@ -241,14 +239,12 @@ async function uploadFile(
     // check if the returned data is an array and contains at least one element
     if (Array.isArray(resData) && resData.length > 0) {
       // find the object with Name as an empty string, get the file hash
-      const fileItem = resData.find(
-        (item) => item.Name === filePath.split(path.sep).pop() || '',
-      );
+      const fileItem = resData.find((item) => item.Name === fileName);
       if (fileItem) {
         spinner.succeed(`Successfully uploaded ${filePath} to glitter ipfs`);
         const uploadData = {
           path: filePath,
-          filename: filePath.split(path.sep).pop() || '',
+          filename: fileName,
           contentHash: fileItem.Hash,
           previewHash: null,
           size: sizeCheck.size,
@@ -257,10 +253,10 @@ async function uploadFile(
           shortUrl: fileItem.ShortUrl || null,
         };
         saveUploadHistory(uploadData);
-        
-        return { 
+
+        return {
           hash: fileItem.Hash,
-          shortUrl: fileItem.ShortUrl
+          shortUrl: fileItem.ShortUrl,
         };
       }
       spinner.fail(`File hash not found in response`);
@@ -275,13 +271,9 @@ async function uploadFile(
     if (error.response && error.response.data && error.response.data.code) {
       const errorCode = error.response.data.code.toString();
       if (ERROR_CODES[errorCode]) {
-        spinner.fail(
-          `Error: ${ERROR_CODES[errorCode]} (Code: ${errorCode})`,
-        );
+        spinner.fail(`Error: ${ERROR_CODES[errorCode]} (Code: ${errorCode})`);
         console.log(
-          chalk.red(
-            `Error: ${ERROR_CODES[errorCode]} (Code: ${errorCode})`,
-          ),
+          chalk.red(`Error: ${ERROR_CODES[errorCode]} (Code: ${errorCode})`),
         );
         return null;
       }
@@ -295,7 +287,11 @@ async function uploadFile(
 
 export default async function (
   filePath: string,
-): Promise<{ contentHash: string; previewHash?: string | null; shortUrl?: string } | null> {
+): Promise<{
+  contentHash: string;
+  previewHash?: string | null;
+  shortUrl?: string;
+} | null> {
   // check if the file is a directory
   const deviceId = getDeviceId();
   if (!deviceId) {
@@ -324,7 +320,7 @@ export default async function (
     return {
       contentHash,
       previewHash: null,
-      shortUrl
+      shortUrl,
     };
   }
 
