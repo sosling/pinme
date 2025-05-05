@@ -60,8 +60,8 @@ pinme upload ./dist
 
 After successful deployment, PinMe will output the CID and access links. You can access your blog via:
 
-- IPFS Gateway: `https://ipfs.io/ipfs/<your-CID>`
-- PinMe Gateway: `https://gateway.pinme.io/ipfs/<your-CID>`
+- IPFS Gateway: `https://ipfs.glitterprotocol.dev/ipfs/<your-CID>`
+- PinMe Gateway: `https://pinme.dev/ipfs/<your-CID>`
 - Or set up a custom domain (see PinMe documentation)
 
 ## Contributing
