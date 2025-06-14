@@ -49,7 +49,7 @@ function loadFilesToArrRecursively(
   const filesArr: FileInfo[] = [];
   const sep = path.sep;
 
-  dirPath ??= directoryPath.replace(dist, '');
+  dirPath = dirPath || directoryPath.replace(dist, '');
 
   // check if it is a directory
   if (fs.statSync(directoryPath).isDirectory()) {
@@ -131,13 +131,23 @@ async function uploadDirectory(
 
   // recursively get all files
   const files = loadFilesToArrRecursively(directoryPath, dist);
+  const totalFiles = files.length;
   files.forEach((file) => {
     formData.append('file', fs.createReadStream(file.path), {
       filename: file.name,
     });
   });
 
-  const spinner = ora(`Uploading ${directoryPath} to glitter ipfs...`).start();
+  // 创建带时间计数的spinner
+  const startTime = Date.now();
+  const spinner = ora(`Uploading ${dist} (${totalFiles} files)... 0s`).start();
+  
+  // 更新时间显示的定时器
+  const timeInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    spinner.text = `Uploading ${dist} (${totalFiles} files)... ${elapsed}s`;
+  }, 1000);
+
   try {
     const response = await axios.post<IpfsResponse['data']>(
       `${ipfsApiUrl}/add?uid=${deviceId}&cidV=1`,
@@ -146,17 +156,20 @@ async function uploadDirectory(
         headers: {
           ...formData.getHeaders(),
         },
+        timeout: 600000, // 10 minutes timeout
       },
     );
 
+    clearInterval(timeInterval);
     const resData = response.data.data;
     // check if the returned data is an array and contains at least one element
     if (Array.isArray(resData) && resData.length > 0) {
       // find the object with Name as an empty string, get the directory hash
       const directoryItem = resData.find((item) => item.Name === dist);
       if (directoryItem) {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
         spinner.succeed(
-          `Successfully uploaded ${directoryPath} to glitter ipfs`,
+          `Successfully uploaded ${dist} (${totalFiles} files) in ${elapsed}s`,
         );
         const fileCount = countFilesInDirectory(directoryPath);
         const uploadData = {
@@ -184,6 +197,7 @@ async function uploadDirectory(
     }
     return null;
   } catch (error: any) {
+    clearInterval(timeInterval);
     // 处理特定错误码
     if (error.response && error.response.data && error.response.data.code) {
       const errorCode = error.response.data.code.toString();
@@ -215,10 +229,21 @@ async function uploadFile(
       )} (size: ${formatSize(sizeCheck.size)})`,
     );
   }
-  const spinner = ora(`Uploading ${filePath} to glitter ipfs...`).start();
+  
+  const fileName = filePath.split(path.sep).pop() || '';
+  
+  // 创建带时间计数的spinner
+  const startTime = Date.now();
+  const spinner = ora(`Uploading ${fileName}... 0s`).start();
+  
+  // 更新时间显示的定时器
+  const timeInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    spinner.text = `Uploading ${fileName}... ${elapsed}s`;
+  }, 1000);
+
   try {
     const formData = new FormData();
-    const fileName = filePath.split(path.sep).pop() || '';
     const encodedFileName = encodeURIComponent(fileName);
 
     formData.append('file', fs.createReadStream(filePath), {
@@ -232,16 +257,19 @@ async function uploadFile(
         headers: {
           ...formData.getHeaders(),
         },
+        timeout: 600000, // 10 minutes timeout
       },
     );
 
+    clearInterval(timeInterval);
     const resData = response.data.data;
     // check if the returned data is an array and contains at least one element
     if (Array.isArray(resData) && resData.length > 0) {
       // find the object with Name as an empty string, get the file hash
       const fileItem = resData.find((item) => item.Name === fileName);
       if (fileItem) {
-        spinner.succeed(`Successfully uploaded ${filePath} to glitter ipfs`);
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        spinner.succeed(`Successfully uploaded ${fileName} in ${elapsed}s`);
         const uploadData = {
           path: filePath,
           filename: fileName,
@@ -267,6 +295,7 @@ async function uploadFile(
     }
     return null;
   } catch (error: any) {
+    clearInterval(timeInterval);
     // 处理特定错误码
     if (error.response && error.response.data && error.response.data.code) {
       const errorCode = error.response.data.code.toString();

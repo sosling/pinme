@@ -8,6 +8,7 @@ import figlet from "figlet";
 import { version } from '../package.json';
 
 import upload from './upload';
+import remove from './remove';
 import { displayUploadHistory, clearUploadHistory } from './utils/history';
 
 // display the ASCII art logo
@@ -31,6 +32,11 @@ program
     .command('upload')
     .description("upload a file or directory to IPFS")
     .action(() => upload());
+
+program
+    .command('rm')
+    .description("remove a file from IPFS network")
+    .action(() => remove());
 
 program
     .command('list')
@@ -73,6 +79,7 @@ program.on('--help', () => {
   console.log('');
   console.log('Examples:');
   console.log('  $ pinme upload');
+  console.log('  $ pinme rm <hash>');
   console.log('  $ pinme list -l 5');
   console.log('  $ pinme ls');
   console.log('  $ pinme help');

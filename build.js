@@ -16,7 +16,7 @@ esbuild.build({
   platform: 'node',
   target: 'node14',
   format: 'cjs',
-  external: Object.keys(require('./package.json').dependencies || {}),
+  external: Object.keys(require('./package.json').dependencies || {}).filter(dep => dep !== 'axios'),
   banner: { js: '#!/usr/bin/env node' },
   logLevel: 'info',
   define,

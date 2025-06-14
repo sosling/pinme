@@ -53,7 +53,7 @@ export default async (options?: UploadOptions): Promise<void> => {
   try {
     console.log(
       figlet.textSync('PINME', {
-        font: 'Shadow',
+        font: 'Standard',
         horizontalLayout: 'default',
         verticalLayout: 'default',
         width: 180,

@@ -38,6 +38,16 @@ pinme upload
 pinme upload /path/to/file-or-directory
 ```
 
+### Remove files from IPFS
+
+```bash
+# Interactive removal
+pinme rm
+
+# Remove a specific file by hash
+pinme rm <IPFS_hash>
+```
+
 ### View upload history
 
 ```bash
@@ -85,6 +95,28 @@ pinme upload ./example.jpg
 # Upload an entire directory
 pinme upload ./my-website
 ```
+
+### `rm`
+
+Remove a file from the IPFS network.
+
+```bash
+pinme rm [hash]
+```
+
+**Options:**
+- `hash`: IPFS content hash to remove (optional, if not provided, interactive mode will be entered)
+
+**Examples:**
+```bash
+# Interactive removal
+pinme rm
+
+# Remove a specific file by hash
+pinme rm bafybeifdwyoz66u5czbbjvmmais5fzrzrolxbyiydqsbrxessndt3s6zdi
+```
+
+**Note:** This action permanently removes content from the IPFS network. Make sure you have the correct IPFS hash before proceeding.
 
 ### `list` / `ls`
 
