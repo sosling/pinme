@@ -156,7 +156,7 @@ async function uploadDirectory(
         headers: {
           ...formData.getHeaders(),
         },
-        timeout: 600000, // 10 minutes timeout
+        timeout: 1800000, // 30 minutes timeout
       },
     );
 
@@ -257,7 +257,7 @@ async function uploadFile(
         headers: {
           ...formData.getHeaders(),
         },
-        timeout: 600000, // 10 minutes timeout
+        timeout: 1800000, // 30 minutes timeout
       },
     );
 
